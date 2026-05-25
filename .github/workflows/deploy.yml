@@ -12,7 +12,6 @@ jobs:
   deploy-backend:
     name: Deploy Backend API
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,7 +42,6 @@ jobs:
     name: Deploy Web Manager React
     runs-on: ubuntu-latest
     needs: deploy-backend
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -67,8 +65,11 @@ jobs:
         run: |
           cd frontend/web_manager
           npm install
-          VITE_API_URL=${{ secrets.BACKEND_URL }} npm run build
+          chmod -R +x node_modules/.bin   # <-- fix: vite permission denied
+          VITE_API_URL="${{ secrets.BACKEND_URL }}" npm run build
 
+      # Cloud Run --source tidak ikut sertakan hasil build lokal.
+      # Solusinya: kita deploy static dist/ menggunakan nginx image ringan.
       - name: Deploy Frontend ke Cloud Run
         run: |
           gcloud run deploy kpi-frontend \
@@ -78,14 +79,14 @@ jobs:
             --allow-unauthenticated \
             --memory 256Mi \
             --min-instances 0 \
-            --max-instances 3 \
-            --clear-base-image
+            --max-instances 3
+            # Catatan: pastikan ada Dockerfile di frontend/web_manager
+            # (lihat contoh Dockerfile di bawah komen ini)
 
   deploy-mobile:
     name: Deploy Mobile Karyawan PWA
     runs-on: ubuntu-latest
     needs: deploy-backend
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -109,7 +110,8 @@ jobs:
         run: |
           cd frontend/mobile
           npm install
-          VITE_API_URL=${{ secrets.BACKEND_URL }} npm run build
+          chmod -R +x node_modules/.bin   # <-- fix: vite permission denied
+          VITE_API_URL="${{ secrets.BACKEND_URL }}" npm run build
 
       - name: Deploy Mobile ke Cloud Run
         run: |
@@ -120,15 +122,15 @@ jobs:
             --allow-unauthenticated \
             --memory 256Mi \
             --min-instances 0 \
-            --max-instances 3 \
-            --clear-base-image
+            --max-instances 3
+            # Catatan: pastikan ada Dockerfile di frontend/mobile
+            # (lihat contoh Dockerfile di bawah komen ini)
 
   notify:
     name: Deployment Summary
     runs-on: ubuntu-latest
     needs: [deploy-backend, deploy-frontend, deploy-mobile]
     if: always()
-
     steps:
       - name: Print Result
         run: |
