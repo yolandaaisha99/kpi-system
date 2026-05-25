@@ -1,6 +1,6 @@
 {
     "name": "kpi-system/backend",
-    "description": "KPI System REST API — Laravel 10",
+    "description": "KPI System REST API - Laravel 10",
     "type": "project",
     "require": {
         "php": "^8.2",
@@ -8,11 +8,10 @@
         "laravel/sanctum": "^3.3",
         "google/cloud-firestore": "^1.27",
         "google/cloud-storage": "^1.33",
-        "superbalist/flysystem-google-cloud-storage": "^3.0"
+        "league/flysystem-google-cloud-storage": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "laravel/tinker": "^2.8",
         "phpunit/phpunit": "^10.1"
     },
     "autoload": {
@@ -29,7 +28,10 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true
