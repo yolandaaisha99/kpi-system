@@ -1,5 +1,5 @@
 // src/pages/Reports.jsx
-import styles from './Dashboard.module.css'
+import styles from './dashboard.module.css'
 export default function Reports() {
   return (
     <div className={styles.page}>

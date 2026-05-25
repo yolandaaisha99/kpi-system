@@ -1,7 +1,7 @@
 // src/pages/Employees.jsx
 import { useState, useEffect } from 'react'
 import api from '../utils/api.js'
-import styles from './Dashboard.module.css'
+import styles from './dashboard.module.css'
 
 export function Employees() {
   const [list, setList] = useState([])

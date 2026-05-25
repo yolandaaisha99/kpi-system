@@ -1,7 +1,7 @@
 // src/pages/Evaluations.jsx
 import { useState, useEffect } from 'react'
 import api from '../utils/api.js'
-import styles from './Dashboard.module.css'
+import styles from './dashboard.module.css'
 
 export default function Evaluations() {
   const [list, setList] = useState([])

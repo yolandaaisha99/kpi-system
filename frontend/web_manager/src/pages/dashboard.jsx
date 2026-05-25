@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import api from '../utils/api.js'
-import styles from './Dashboard.module.css'
+import styles from './dashboard.module.css'
 
 // ── Sub-komponen MetricCard ──────────────────
 function MetricCard({ label, value, sub, color }) {
