@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../utils/api.js'
-import styles from './Home.module.css'
+import styles from './home.module.css'
 
 // ── Ring Score Component ────────────────────
 function ScoreRing({ score }) {

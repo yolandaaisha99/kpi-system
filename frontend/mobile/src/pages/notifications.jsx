@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../utils/api.js'
-import styles from './Notifications.module.css'
+import styles from './notifications.module.css'
 
 const ICONS = {
   kpi_assigned:      { emoji: '⚖',  label: 'KPI Ditetapkan' },
