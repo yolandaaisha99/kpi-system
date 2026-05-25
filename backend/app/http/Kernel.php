@@ -1,10 +1,10 @@
 <?php
 
-namespace app\http;
+namespace App\Http;
 
-use Illuminate\Foundation\http\Kernel as httpKernel;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-class Kernel extends httpKernel
+class Kernel extends HttpKernel
 {
     protected $middleware = [];
 
