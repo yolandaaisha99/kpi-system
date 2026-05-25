@@ -12,6 +12,7 @@ jobs:
   deploy-backend:
     name: Deploy Backend API
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,22 +27,23 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-- name: Deploy Backend ke Cloud Run
-  run: |
-    gcloud run deploy kpi-backend \
-      --source ./backend \
-      --region ${{ env.GCP_REGION }} \
-      --platform managed \
-      --allow-unauthenticated \
-      --set-env-vars=APP_ENV=production,APP_KEY=${{ secrets.APP_KEY }},DB_HOST=${{ secrets.CLOUD_SQL_HOST }},DB_DATABASE=kpi_system,DB_USERNAME=root,DB_PASSWORD=${{ secrets.DB_PASSWORD }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
-      --memory 512Mi \
-      --min-instances 0 \
-      --max-instances 5
+      - name: Deploy Backend ke Cloud Run
+        run: |
+          gcloud run deploy kpi-backend \
+            --source ./backend \
+            --region ${{ env.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars=APP_ENV=production,APP_KEY=${{ secrets.APP_KEY }},DB_HOST=${{ secrets.CLOUD_SQL_HOST }},DB_DATABASE=kpi_system,DB_USERNAME=root,DB_PASSWORD=${{ secrets.DB_PASSWORD }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
+            --memory 512Mi \
+            --min-instances 0 \
+            --max-instances 5
 
   deploy-frontend:
     name: Deploy Web Manajer React
     runs-on: ubuntu-latest
     needs: deploy-backend
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,18 +72,19 @@ jobs:
       - name: Deploy Frontend ke Cloud Run
         run: |
           gcloud run deploy kpi-frontend \
-          --source ./frontend \
-          --region ${{ env.GCP_REGION }} \
-          --platform managed \
-          --allow-unauthenticated \
-          --memory 256Mi \
-          --min-instances 0 \
-          --max-instances 3
+            --source ./frontend \
+            --region ${{ env.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 256Mi \
+            --min-instances 0 \
+            --max-instances 3
 
   deploy-mobile:
     name: Deploy Mobile Karyawan PWA
     runs-on: ubuntu-latest
     needs: deploy-backend
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -110,19 +113,20 @@ jobs:
       - name: Deploy Mobile ke Cloud Run
         run: |
           gcloud run deploy kpi-mobile \
-          --source ./mobile \
-          --region ${{ env.GCP_REGION }} \
-          --platform managed \
-          --allow-unauthenticated \
-          --memory 256Mi \
-          --min-instances 0  \
-          --max-instances 3
+            --source ./mobile \
+            --region ${{ env.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 256Mi \
+            --min-instances 0 \
+            --max-instances 3
 
   notify:
     name: Selesai
     runs-on: ubuntu-latest
     needs: [deploy-backend, deploy-frontend, deploy-mobile]
     if: always()
+
     steps:
       - name: Rangkuman
         run: |
