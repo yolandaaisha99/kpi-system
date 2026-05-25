@@ -26,17 +26,17 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Deploy Backend ke Cloud Run
-        run: |
-          gcloud run deploy kpi-backend \
-          --source ./backend  \
-          --region ${{ env.GCP_REGION }} \
-          --platform managed \
-          --allow-unauthenticated \
-          --set-env-vars=APP_ENV=production,APP_KEY=${{ secrets.APP_KEY }},DB_HOST=${{ secrets.CLOUD_SQL_HOST }},DB_DATABASE=kpi_system,DB_USERNAME=root,DB_PASSWORD=${{ secrets.DB_PASSWORD }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
-          --memory 512Mi \
-          --min-instances 0 \
-          --max-instances 5
+- name: Deploy Backend ke Cloud Run
+  run: |
+    gcloud run deploy kpi-backend \
+      --source ./backend \
+      --region ${{ env.GCP_REGION }} \
+      --platform managed \
+      --allow-unauthenticated \
+      --set-env-vars=APP_ENV=production,APP_KEY=${{ secrets.APP_KEY }},DB_HOST=${{ secrets.CLOUD_SQL_HOST }},DB_DATABASE=kpi_system,DB_USERNAME=root,DB_PASSWORD=${{ secrets.DB_PASSWORD }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
+      --memory 512Mi \
+      --min-instances 0 \
+      --max-instances 5
 
   deploy-frontend:
     name: Deploy Web Manajer React
