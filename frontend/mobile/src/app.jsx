@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import UpdateProgress from './pages/UpdateProgress.jsx'
-import LoginMobile from './pages/LoginMobile.jsx'
-import Notifications from './pages/Notifications.jsx'
+import Home from './pages/home.jsx'
+import UpdateProgress from './pages/updateprogress.jsx'
+import LoginMobile from './pages/loginmobile.jsx'
+import Notifications from './pages/notifications.jsx'
 
 function Guard({ children }) {
   const token = localStorage.getItem('kpi_token')
