@@ -68,6 +68,8 @@ jobs:
           chmod -R +x node_modules/.bin   # <-- fix: vite permission denied
           VITE_API_URL="${{ secrets.BACKEND_URL }}" npm run build
 
+      # Cloud Run --source tidak ikut sertakan hasil build lokal.
+      # Solusinya: kita deploy static dist/ menggunakan nginx image ringan.
       - name: Deploy Frontend ke Cloud Run
         run: |
           gcloud run deploy kpi-frontend \
@@ -77,8 +79,9 @@ jobs:
             --allow-unauthenticated \
             --memory 256Mi \
             --min-instances 0 \
-            --max-instances 3 \
-            --clear-base-image
+            --max-instances 3
+            # Catatan: pastikan ada Dockerfile di frontend/web_manager
+            # (lihat contoh Dockerfile di bawah komen ini)
 
   deploy-mobile:
     name: Deploy Mobile Karyawan PWA
@@ -119,8 +122,9 @@ jobs:
             --allow-unauthenticated \
             --memory 256Mi \
             --min-instances 0 \
-            --max-instances 3 \
-            --clear-base-image
+            --max-instances 3
+            # Catatan: pastikan ada Dockerfile di frontend/mobile
+            # (lihat contoh Dockerfile di bawah komen ini)
 
   notify:
     name: Deployment Summary
