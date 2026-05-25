@@ -30,10 +30,13 @@ WORKDIR /var/www/html
 COPY . .
 
 # Laravel setup
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+CMD sh -c "php artisan config:cache && \
+           php artisan route:cache && \
+           php artisan view:cache && \
+           php-fpm -D && \
+           nginx -g 'daemon off;'"
 
 # Nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
