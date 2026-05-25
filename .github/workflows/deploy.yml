@@ -27,7 +27,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Deploy Backend ke Cloud Run
-        run: >
+        run: |
           gcloud run deploy kpi-backend
           --source ./backend
           --region ${{ env.GCP_REGION }}
@@ -68,7 +68,7 @@ jobs:
           VITE_API_URL=${{ secrets.BACKEND_URL }} npm run build
 
       - name: Deploy Frontend ke Cloud Run
-        run: >
+        run: |
           gcloud run deploy kpi-frontend
           --source ./frontend
           --region ${{ env.GCP_REGION }}
@@ -108,7 +108,7 @@ jobs:
           VITE_API_URL=${{ secrets.BACKEND_URL }} npm run build
 
       - name: Deploy Mobile ke Cloud Run
-        run: >
+        run: |
           gcloud run deploy kpi-mobile
           --source ./mobile
           --region ${{ env.GCP_REGION }}
