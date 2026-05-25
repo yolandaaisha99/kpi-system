@@ -65,7 +65,7 @@ jobs:
 
       - name: Install dan Build Frontend
         run: |
-          cd frontend
+          cd frontend/web_manager
           npm install
           VITE_API_URL=${{ secrets.BACKEND_URL }} npm run build
 
@@ -106,14 +106,14 @@ jobs:
 
       - name: Install dan Build Mobile
         run: |
-          cd mobile
+          cd frontend/mobile
           npm install
           VITE_API_URL=${{ secrets.BACKEND_URL }} npm run build
 
       - name: Deploy Mobile ke Cloud Run
         run: |
           gcloud run deploy kpi-mobile \
-            --source ./mobile \
+            --source ./frontend/mobile \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
