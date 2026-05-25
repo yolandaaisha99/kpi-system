@@ -40,7 +40,7 @@ jobs:
             --max-instances 5
 
   deploy-frontend:
-    name: Deploy Web Manajer React
+    name: Deploy Web Manager React
     runs-on: ubuntu-latest
     needs: deploy-backend
 
@@ -72,7 +72,7 @@ jobs:
       - name: Deploy Frontend ke Cloud Run
         run: |
           gcloud run deploy kpi-frontend \
-            --source ./frontend \
+            --source ./frontend/web_manager \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
@@ -122,13 +122,13 @@ jobs:
             --max-instances 3
 
   notify:
-    name: Selesai
+    name: Deployment Summary
     runs-on: ubuntu-latest
     needs: [deploy-backend, deploy-frontend, deploy-mobile]
     if: always()
 
     steps:
-      - name: Rangkuman
+      - name: Print Result
         run: |
           echo "Backend  : ${{ needs.deploy-backend.result }}"
           echo "Frontend : ${{ needs.deploy-frontend.result }}"
