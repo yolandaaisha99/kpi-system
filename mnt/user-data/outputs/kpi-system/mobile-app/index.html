@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#070c14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>KPI Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: #070c14;
+    --bg-1: #0d1524;
+    --bg-2: #111d30;
+    --bg-card: #0f1c2e;
+    --border: rgba(255,255,255,0.07);
+    --accent: #22d9a5;
+    --accent-dim: rgba(34,217,165,0.12);
+    --accent-2: #4f9eff;
+    --warn: #f5a623;
+    --warn-dim: rgba(245,166,35,0.12);
+    --danger: #ff5e5e;
+    --danger-dim: rgba(255,94,94,0.12);
+    --text-1: #e8edf5;
+    --text-2: #8a98b0;
+    --text-3: #4a5568;
+    --font: 'Plus Jakarta Sans', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --safe-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { height: 100%; }
+  body {
+    font-family: var(--font);
+    background: var(--bg-0);
+    color: var(--text-1);
+    min-height: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    padding-bottom: calc(70px + var(--safe-bottom));
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .topbar-logo { font-size: 16px; font-weight: 700; color: var(--accent); }
+  .topbar-avatar {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #07120e;
+    cursor: pointer;
+  }
+  .topbar-notif {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    position: relative;
+    cursor: pointer;
+  }
+  .notif-dot {
+    position: absolute; top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--danger);
+    border-radius: 50%;
+    border: 1.5px solid var(--bg-1);
+  }
+
+  /* GREETING */
+  .greeting {
+    padding: 20px 20px 0;
+  }
+  .greeting-hi { font-size: 13px; color: var(--text-2); margin-bottom: 4px; }
+  .greeting-name { font-size: 22px; font-weight: 700; }
+  .greeting-sub { font-size: 13px; color: var(--text-2); margin-top: 4px; }
+
+  /* PERIOD STRIP */
+  .period-strip {
+    margin: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .period-label { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+  .period-val { font-size: 13px; font-weight: 700; color: var(--accent); font-family: var(--mono); }
+  .period-days { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+  /* SCORE RING CARD */
+  .score-card {
+    margin: 0 20px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(34,217,165,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .ring-container { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-bg   { fill: none; stroke: var(--bg-3, #182540); stroke-width: 7; }
+  .ring-fill { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
+  .ring-text {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .ring-pct { font-size: 18px; font-weight: 700; font-family: var(--mono); color: var(--accent); line-height: 1; }
+  .ring-label { font-size: 9px; color: var(--text-3); }
+
+  .score-info { flex: 1; }
+  .score-info-title { font-size: 12px; color: var(--text-2); font-weight: 500; margin-bottom: 6px; }
+  .score-val-big { font-size: 24px; font-weight: 700; font-family: var(--mono); line-height: 1; }
+  .score-trend { font-size: 12px; color: var(--accent); margin-top: 6px; font-weight: 500; }
+  .score-grade {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid rgba(34,217,165,0.25);
+    font-size: 13px; font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-family: var(--mono);
+  }
+
+  /* SECTION HEADER */
+  .section-head {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .section-title { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; }
+  .section-link { font-size: 12px; color: var(--accent); font-weight: 600; cursor: pointer; }
+
+  /* TASK CARDS */
+  .tasks-list { padding: 0 20px; }
+  .task-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+  .task-card:hover { border-color: var(--border-hover, rgba(255,255,255,0.14)); }
+  .task-card:active { transform: scale(0.99); }
+  .task-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 2px 0 0 2px;
+  }
+  .task-card.green::before { background: var(--accent); }
+  .task-card.warn::before  { background: var(--warn); }
+  .task-card.danger::before { background: var(--danger); }
+
+  .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .task-name { font-size: 14px; font-weight: 700; }
+  .task-weight-badge {
+    background: var(--accent-2-dim, rgba(79,158,255,0.12));
+    color: var(--accent-2);
+    font-size: 10px; font-weight: 700;
+    padding: 3px 9px; border-radius: 8px;
+    font-family: var(--mono);
+    border: 1px solid rgba(79,158,255,0.2);
+    white-space: nowrap;
+  }
+  .task-bar-bg {
+    background: var(--bg-2);
+    border-radius: 4px;
+    height: 7px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .task-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .task-bar-fill.green  { background: var(--accent); }
+  .task-bar-fill.warn   { background: var(--warn); }
+  .task-bar-fill.danger { background: var(--danger); }
+
+  .task-footer { display: flex; justify-content: space-between; align-items: center; }
+  .task-progress-text { font-size: 12px; color: var(--text-2); font-family: var(--mono); }
+  .task-status-chip { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 8px; }
+  .chip-green  { background: var(--accent-dim); color: var(--accent); }
+  .chip-warn   { background: var(--warn-dim); color: var(--warn); }
+  .chip-danger { background: var(--danger-dim); color: var(--danger); }
+
+  /* UPDATE BUTTON */
+  .update-btn-wrap {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 430px;
+    padding: 12px 20px calc(12px + var(--safe-bottom));
+    background: linear-gradient(to top, var(--bg-0) 70%, transparent);
+    z-index: 20;
+  }
+  .update-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #07120e;
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--font);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+  .update-btn:hover { background: #1fc494; }
+  .update-btn:active { transform: scale(0.99); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: calc(var(--safe-bottom) + 0px);
+    left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 430px;
+    display: none; /* tersembunyi, diganti update-btn */
+  }
+
+  /* MODAL UPDATE PROGRES */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 50;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 430px;
+    padding: 20px 20px calc(20px + var(--safe-bottom));
+    animation: slideUpSheet 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .sheet-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 18px;
+  }
+  .sheet-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .sheet-sub { font-size: 12px; color: var(--text-2); margin-bottom: 20px; }
+  .form-label { font-size: 11px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 8px; }
+  .form-input, .form-select {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text-1);
+    font-size: 15px;
+    font-family: var(--font);
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+  .form-input[type="number"] { font-family: var(--mono); font-size: 18px; font-weight: 700; }
+  .upload-area {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .upload-area:hover { border-color: var(--accent); }
+  .upload-icon { font-size: 28px; margin-bottom: 6px; }
+  .upload-text { font-size: 13px; color: var(--text-2); }
+  .upload-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+  .submit-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #07120e;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .submit-btn:hover { background: #1fc494; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">KPI Tracker</div>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <div class="topbar-notif" onclick="alert('3 notifikasi belum dibaca')">
+      🔔
+      <div class="notif-dot"></div>
+    </div>
+    <div class="topbar-avatar">AP</div>
+  </div>
+</div>
+
+<!-- GREETING -->
+<div class="greeting">
+  <div class="greeting-hi">Selamat pagi,</div>
+  <div class="greeting-name">Andi Pratama 👋</div>
+  <div class="greeting-sub">Yuk update progres hari ini!</div>
+</div>
+
+<!-- PERIOD STRIP -->
+<div class="period-strip">
+  <div>
+    <div class="period-label">Periode Evaluasi</div>
+    <div class="period-days">11 hari tersisa</div>
+  </div>
+  <div class="period-val">Mei 2026</div>
+</div>
+
+<!-- SCORE RING -->
+<div class="score-card">
+  <div class="ring-container">
+    <svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80">
+      <circle class="ring-bg" cx="40" cy="40" r="32"/>
+      <circle class="ring-fill" cx="40" cy="40" r="32"
+        stroke-dasharray="201.06"
+        stroke-dashoffset="44.23"/>
+    </svg>
+    <div class="ring-text">
+      <div class="ring-pct">78%</div>
+      <div class="ring-label">KPI</div>
+    </div>
+  </div>
+  <div class="score-info">
+    <div class="score-info-title">Skor KPI Bulan Ini</div>
+    <div class="score-val-big">78 <span style="font-size:14px; color:var(--text-2);">/ 100</span></div>
+    <div class="score-trend">↑ +6 poin dari minggu lalu</div>
+  </div>
+  <div class="score-grade">B</div>
+</div>
+
+<!-- TASK LIST -->
+<div class="section-head">
+  <div class="section-title">Target Aktif Bulan Ini</div>
+  <div class="section-link" onclick="alert('Lihat semua riwayat progres')">Lihat semua</div>
+</div>
+
+<div class="tasks-list">
+
+  <div class="task-card green" onclick="openUpdateModal('Penyelesaian Tiket', '90', '100', 'tiket')">
+    <div class="task-header">
+      <div class="task-name">Penyelesaian Tiket</div>
+      <span class="task-weight-badge">Bobot 40%</span>
+    </div>
+    <div class="task-bar-bg"><div class="task-bar-fill green" style="width:90%"></div></div>
+    <div class="task-footer">
+      <span class="task-progress-text">90 / 100 tiket</span>
+      <span class="task-status-chip chip-green">On Track ✓</span>
+    </div>
+  </div>
+
+  <div class="task-card warn" onclick="openUpdateModal('Code Review', '12', '20', 'PR')">
+    <div class="task-header">
+      <div class="task-name">Code Review</div>
+      <span class="task-weight-badge">Bobot 35%</span>
+    </div>
+    <div class="task-bar-bg"><div class="task-bar-fill warn" style="width:60%"></div></div>
+    <div class="task-footer">
+      <span class="task-progress-text">12 / 20 PR</span>
+      <span class="task-status-chip chip-warn">Perlu Usaha</span>
+    </div>
+  </div>
+
+  <div class="task-card danger" onclick="openUpdateModal('Dokumentasi API', '3', '10', 'dokumen')">
+    <div class="task-header">
+      <div class="task-name">Dokumentasi API</div>
+      <span class="task-weight-badge">Bobot 25%</span>
+    </div>
+    <div class="task-bar-bg"><div class="task-bar-fill danger" style="width:30%"></div></div>
+    <div class="task-footer">
+      <span class="task-progress-text">3 / 10 dokumen</span>
+      <span class="task-status-chip chip-danger">Tertinggal !</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- UPDATE BUTTON -->
+<div class="update-btn-wrap">
+  <button class="update-btn" onclick="openUpdateModal('', '', '', '')">
+    ↑ Update Progres Sekarang
+  </button>
+</div>
+
+<!-- MODAL SHEET UPDATE PROGRES -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Update Progres</div>
+    <div class="sheet-sub" id="sheet-sub">Masukkan progres terbaru kamu</div>
+
+    <label class="form-label">Pilih Target / Tugas</label>
+    <select class="form-select" id="task-select">
+      <option value="">Pilih target...</option>
+      <option value="1">Penyelesaian Tiket (target: 100)</option>
+      <option value="2">Code Review (target: 20 PR)</option>
+      <option value="3">Dokumentasi API (target: 10 dok)</option>
+    </select>
+
+    <label class="form-label">Nilai Progres Saat Ini</label>
+    <input type="number" class="form-input" id="progress-input" placeholder="0">
+
+    <label class="form-label">Catatan Progres</label>
+    <input type="text" class="form-input" placeholder="cth: Sudah menyelesaikan 25 tiket batch pertama" id="note-input">
+
+    <label class="form-label">Upload Bukti Kerja (Opsional)</label>
+    <div class="upload-area" onclick="document.getElementById('file-upload').click()">
+      <div class="upload-icon">📎</div>
+      <div class="upload-text">Tap untuk upload bukti</div>
+      <div class="upload-sub">Screenshot, dokumen, atau foto (max 5MB)</div>
+    </div>
+    <input type="file" id="file-upload" style="display:none" accept="image/*,.pdf">
+
+    <button class="submit-btn" onclick="submitProgress()">Simpan Update Progres</button>
+  </div>
+</div>
+
+<script>
+  // Ganti dengan endpoint API Laravel di Cloud Run
+  const API_BASE = 'https://your-api-service.run.app/api';
+  const TOKEN = localStorage.getItem('kpi_token');
+
+  function openUpdateModal(taskName, current, target, unit) {
+    document.getElementById('modal').classList.add('open');
+    if (taskName) {
+      const sel = document.getElementById('task-select');
+      document.getElementById('sheet-sub').textContent = `Update: ${taskName} (${current}/${target} ${unit})`;
+      document.getElementById('progress-input').value = current;
+    }
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  async function submitProgress() {
+    const taskId  = document.getElementById('task-select').value;
+    const value   = document.getElementById('progress-input').value;
+    const note    = document.getElementById('note-input').value;
+    const file    = document.getElementById('file-upload').files[0];
+
+    if (!taskId || !value) {
+      alert('Pilih target dan masukkan nilai progres dulu ya!');
+      return;
+    }
+
+    // TODO: upload file ke Cloud Storage, lalu POST ke API
+    // const formData = new FormData();
+    // formData.append('task_id', taskId);
+    // formData.append('progress_value', value);
+    // formData.append('notes', note);
+    // if (file) formData.append('evidence', file);
+    //
+    // const res = await fetch(`${API_BASE}/task-progress`, {
+    //   method: 'POST',
+    //   headers: { 'Authorization': `Bearer ${TOKEN}` },
+    //   body: formData
+    // });
+
+    alert(`Progres berhasil diupdate! (Hubungkan ke API untuk data nyata)\n\nTarget: ${document.getElementById('task-select').options[document.getElementById('task-select').selectedIndex].text}\nNilai: ${value}`);
+    closeModal();
+  }
+
+  // Animasi ring onload
+  window.addEventListener('load', () => {
+    const fill = document.querySelector('.ring-fill');
+    const circumference = 2 * Math.PI * 32;
+    const pct = 78;
+    fill.style.strokeDashoffset = circumference * (1 - pct / 100);
+  });
+</script>
+</body>
+</html>
