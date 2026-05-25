@@ -63,7 +63,7 @@ jobs:
 
       - name: Install dan Build Frontend
         run: |
-          cd frontend/web_manager
+          cd frontend
           npm install
           chmod -R +x node_modules/.bin   # <-- fix: vite permission denied
           VITE_API_URL="${{ secrets.BACKEND_URL }}" npm run build
@@ -73,7 +73,7 @@ jobs:
       - name: Deploy Frontend ke Cloud Run
         run: |
           gcloud run deploy kpi-frontend \
-            --source ./frontend/web_manager \
+            --source ./frontend \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
@@ -108,7 +108,7 @@ jobs:
 
       - name: Install dan Build Mobile
         run: |
-          cd frontend/mobile
+          cd mobile
           npm install
           chmod -R +x node_modules/.bin   # <-- fix: vite permission denied
           VITE_API_URL="${{ secrets.BACKEND_URL }}" npm run build
@@ -116,7 +116,7 @@ jobs:
       - name: Deploy Mobile ke Cloud Run
         run: |
           gcloud run deploy kpi-mobile \
-            --source ./frontend/mobile \
+            --source ./mobile \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
