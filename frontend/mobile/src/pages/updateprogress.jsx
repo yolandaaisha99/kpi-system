@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../utils/api.js'
-import styles from './updateProgress.module.css'
+import styles from './updateprogress.module.css'
 
 export default function UpdateProgress() {
   const [tasks, setTasks]         = useState([])

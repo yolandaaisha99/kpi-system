@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import styles from './Layout.module.css'
+import styles from './layout.module.css'
 
 const NAV_ITEMS = [
   { to: '/',            icon: '▣', label: 'Dashboard',      end: true },

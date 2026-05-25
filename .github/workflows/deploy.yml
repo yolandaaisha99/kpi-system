@@ -78,7 +78,8 @@ jobs:
             --allow-unauthenticated \
             --memory 256Mi \
             --min-instances 0 \
-            --max-instances 3
+            --max-instances 3 \
+            --clear-base-image
 
   deploy-mobile:
     name: Deploy Mobile Karyawan PWA
