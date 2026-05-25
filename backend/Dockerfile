@@ -20,7 +20,8 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 8080
 
-CMD sh -c "chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+CMD sh -c "cd /var/www/html && \
+           chown -R www-data:www-data storage bootstrap/cache && \
            php artisan config:cache && \
            php artisan route:cache && \
            php artisan view:cache && \
