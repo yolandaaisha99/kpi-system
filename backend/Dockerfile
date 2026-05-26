@@ -20,6 +20,8 @@ EXPOSE 8080
 CMD sh -c "cd /var/www/html && \
            chown -R www-data:www-data storage bootstrap/cache && \
            php artisan package:discover --ansi && \
+           php artisan migrate --force && \
+           php artisan db:seed --force && \
            php artisan config:cache && \
            php artisan route:cache && \
            php-fpm -D && \

@@ -80,7 +80,7 @@ jobs:
             --memory 256Mi \
             --min-instances 0 \
             --max-instances 3
-            # Catatan: pastikan ada Dockerfile di frontend/web_manager
+            # Catatan: pastikan ada Dockerfile di frontend
             # (lihat contoh Dockerfile di bawah komen ini)
 
   deploy-mobile:
@@ -123,7 +123,7 @@ jobs:
             --memory 256Mi \
             --min-instances 0 \
             --max-instances 3
-            # Catatan: pastikan ada Dockerfile di frontend/mobile
+            # Catatan: pastikan ada Dockerfile di mobile
             # (lihat contoh Dockerfile di bawah komen ini)
 
   notify:
