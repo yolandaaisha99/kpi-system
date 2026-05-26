@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/layout.jsx'
 import Dashboard from './pages/dashboard.jsx'
-import KpiWeights from './pages/kpiweights.jsx'
+import KpiWeights from './pages/kpiweight.jsx'
 import Employees from './pages/employees.jsx'
-import Evaluations from './pages/evaluations.jsx'
-import Reports from './pages/reports.jsx'
+import Evaluations from './pages/evaluation.jsx'
+import Reports from './pages/report.jsx'
 import Login from './pages/login.jsx'
 
 function PrivateRoute({ children }) {
