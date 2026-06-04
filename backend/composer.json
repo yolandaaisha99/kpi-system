@@ -28,6 +28,11 @@
         "preferred-install": "dist",
         "allow-plugins": {
             "php-http/discovery": true
+        },
+        "policy": {
+            "advisories": {
+                "block": false
+            }
         }
     },
     "minimum-stability": "stable",
