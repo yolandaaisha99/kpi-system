@@ -177,11 +177,13 @@ CREATE TABLE reports (
 -- ------------------------------------------------------------
 
 INSERT INTO users (name, email, password, role, department, position) VALUES
-('Budi Manajer',   'manager@kpi.app',  SHA2('password123', 256), 'manager',  'Engineering', 'Engineering Manager'),
-('Andi Pratama',   'andi@kpi.app',     SHA2('password123', 256), 'employee', 'Engineering', 'Backend Developer'),
-('Sari Lestari',   'sari@kpi.app',     SHA2('password123', 256), 'employee', 'Sales',       'Sales Executive'),
-('Budi Santoso',   'budi@kpi.app',     SHA2('password123', 256), 'employee', 'Engineering', 'QA Engineer'),
-('Dewi Rahayu',    'dewi@kpi.app',     SHA2('password123', 256), 'employee', 'Support',     'Customer Support');
+('Budi Manajer',   'manager@kpi.app',  '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'manager',  'Engineering', 'Engineering Manager'),
+('Andi Pratama',   'andi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Engineering', 'Backend Developer'),
+('Sari Lestari',   'sari@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Sales',       'Sales Executive'),
+('Budi Santoso',   'budi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Engineering', 'QA Engineer'),
+('Dewi Rahayu',    'dewi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Support',     'Customer Support');
+-- Catatan: Semua password = 'password123' (bcrypt hash)
+-- Atau gunakan Laravel seeder: php artisan db:seed
 
 INSERT INTO periods (name, year, month, start_date, end_date, is_active) VALUES
 ('Mei 2026', 2026, 5, '2026-05-01', '2026-05-31', 1),

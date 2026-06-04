@@ -3,7 +3,7 @@
 // ============================================================
 // KPI SYSTEM — routes/api.php
 // Semua endpoint REST API Laravel
-// Base URL: https://kpi-backend-xxx-as.a.run.app/api
+// Base URL: https://kpi-backend-802214430478.asia-southeast2.run.app/api
 // ============================================================
 
 use Illuminate\Support\Facades\Route;
@@ -13,6 +13,9 @@ use App\Http\Controllers\KpiWeightController;
 use App\Http\Controllers\TaskProgressController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PeriodController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ChatController;
 
 // ──────────────────────────────────────────────────────────
 // PUBLIC ROUTES — tidak perlu login
@@ -40,6 +43,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Employees dropdown ────────────────────
     Route::get('/employees', [KpiWeightController::class, 'employees']); // GET /api/employees
 
+    // ── Periods (semua user bisa lihat) ───────
+    Route::get('/periods', [PeriodController::class, 'index']); // GET /api/periods
+
     // ────────────────────────────────────────────────────────
     // MANAGER ONLY — hanya role manager yang bisa akses
     // ────────────────────────────────────────────────────────
@@ -55,6 +61,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/evaluations',               [EvaluationController::class, 'index']);    // GET  /api/evaluations
         Route::post('/evaluations/generate',     [EvaluationController::class, 'generate']); // POST /api/evaluations/generate
         Route::post('/evaluations/{id}/approve', [EvaluationController::class, 'approve']);  // POST /api/evaluations/{id}/approve
+
+        // Periods — kelola periode evaluasi
+        Route::post('/periods',       [PeriodController::class, 'store']);   // POST   /api/periods
+        Route::put('/periods/{id}',   [PeriodController::class, 'update']);  // PUT    /api/periods/{id}
+        Route::delete('/periods/{id}',[PeriodController::class, 'destroy']); // DELETE /api/periods/{id}
+
+        // Reports — laporan ringkasan per periode
+        Route::get('/reports',            [ReportController::class, 'index']);    // GET    /api/reports
+        Route::post('/reports/generate',  [ReportController::class, 'generate']); // POST   /api/reports/generate
+        Route::get('/reports/{id}',       [ReportController::class, 'show']);     // GET    /api/reports/{id}
+        Route::delete('/reports/{id}',    [ReportController::class, 'destroy']);  // DELETE /api/reports/{id}
     });
 
     // ────────────────────────────────────────────────────────
@@ -73,4 +90,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications',             [NotificationController::class, 'index']);    // GET   /api/notifications
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markRead']); // PATCH /api/notifications/{id}/read
     Route::post('/notifications/read-all',   [NotificationController::class, 'readAll']);  // POST  /api/notifications/read-all
-});
+
+    // Chat threads (Firestore — koleksi ke-5)
+    Route::get('/chats',           [ChatController::class, 'index']); // GET  /api/chats
+    Route::get('/chats/{threadId}',[ChatController::class, 'show']);  // GET  /api/chats/{threadId}
+    Route::post('/chats',          [ChatController::class, 'store']); // POST /api/chats
+});

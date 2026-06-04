@@ -92,8 +92,9 @@
   "timestamp": "2026-05-20T14:22:00Z"
 }
 
-// KOLEKSI 5: chatThreads (opsional — fitur tambahan)
+// KOLEKSI 5: chatThreads
 // Thread diskusi antara manajer dan karyawan per evaluasi
+// Dikelola oleh ChatController.php
 // Path: chatThreads/{threadId}/messages/{messageId}
 {
   "threadId": "auto-generated",
