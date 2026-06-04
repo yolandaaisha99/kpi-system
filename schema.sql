@@ -35,7 +35,8 @@ CREATE TABLE personal_access_tokens (
 CREATE TABLE users (
   id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name        VARCHAR(100) NOT NULL,
-  email       VARCHAR(150) NOT NULL UNIQUE,
+  username    VARCHAR(50) UNIQUE,
+  email       VARCHAR(150) UNIQUE,
   password    VARCHAR(255) NOT NULL,
   role        ENUM('manager','employee') NOT NULL DEFAULT 'employee',
   department  VARCHAR(100),
@@ -191,12 +192,12 @@ CREATE TABLE reports (
 -- SAMPLE DATA — untuk testing
 -- ------------------------------------------------------------
 
-INSERT INTO users (name, email, password, role, department, position) VALUES
-('Budi Manajer',   'manager@kpi.app',  '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'manager',  'Engineering', 'Engineering Manager'),
-('Andi Pratama',   'andi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Engineering', 'Backend Developer'),
-('Sari Lestari',   'sari@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Sales',       'Sales Executive'),
-('Budi Santoso',   'budi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Engineering', 'QA Engineer'),
-('Dewi Rahayu',    'dewi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Support',     'Customer Support');
+INSERT INTO users (name, username, email, password, role, department, position) VALUES
+('Budi Manajer',   'manager', 'manager@kpi.app',  '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'manager',  'Engineering', 'Engineering Manager'),
+('Andi Pratama',   'andi',    'andi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Engineering', 'Backend Developer'),
+('Sari Lestari',   'sari',    'sari@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Sales',       'Sales Executive'),
+('Budi Santoso',   'budi',    'budi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Engineering', 'QA Engineer'),
+('Dewi Rahayu',    'dewi',    'dewi@kpi.app',     '$2y$12$LJ3m4ys3Lg8GbvMBOVERuOTGnk1B7t0l5RHvSzYnBnFpVqC6pX0TS', 'employee', 'Support',     'Customer Support');
 -- Catatan: Semua password = 'password123' (bcrypt hash)
 -- Atau gunakan Laravel seeder: php artisan db:seed
 

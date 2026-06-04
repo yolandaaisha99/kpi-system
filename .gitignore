@@ -1,0 +1,44 @@
+# ── Dependencies ──────────────────────────────
+node_modules/
+vendor/
+
+# ── Build artifacts ───────────────────────────
+frontend/dist/
+mobile/dist/
+*.log
+
+# ── Environment & Secrets ─────────────────────
+.env
+*.env.local
+*.env.production
+gcp-key.json
+service-account.json
+
+# ── IDE & OS ──────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Laravel ───────────────────────────────────
+backend/storage/framework/cache/data/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/logs/*
+backend/bootstrap/cache/*
+!backend/storage/framework/cache/.gitkeep
+!backend/storage/framework/sessions/.gitkeep
+!backend/storage/framework/views/.gitkeep
+!backend/storage/logs/.gitkeep
+!backend/bootstrap/cache/.gitkeep
+
+# ── Docker ────────────────────────────────────
+*.pid
+
+# ── Junk files ────────────────────────────────
+*.dart
+*.txt
+!README.md
+!backend/.env.example

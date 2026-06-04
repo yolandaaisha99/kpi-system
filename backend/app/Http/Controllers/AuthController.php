@@ -19,12 +19,14 @@ class AuthController extends Controller
         $request->validate([
             'name'     => 'required|string|max:100',
             'username' => 'required|string|max:50|unique:users',
+            'email'    => 'nullable|email|max:150|unique:users',
             'password' => 'required|string|min:6',
         ]);
 
         $user = User::create([
             'name'      => $request->name,
             'username'  => $request->username,
+            'email'     => $request->email,
             'password'  => Hash::make($request->password),
             'role'      => 'employee',
             'is_active' => true,
@@ -40,6 +42,7 @@ class AuthController extends Controller
                 'id'         => $user->id,
                 'name'       => $user->name,
                 'username'   => $user->username,
+                'email'      => $user->email,
                 'role'       => $user->role,
                 'department' => $user->department,
                 'position'   => $user->position,
@@ -51,6 +54,7 @@ class AuthController extends Controller
     /**
      * Login — menghasilkan token Sanctum
      * POST /api/auth/login
+     * Mendukung login via username ATAU email
      */
     public function login(Request $request)
     {
@@ -59,8 +63,12 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('username', $request->username)
-                    ->where('is_active', true)
+        // Cari user berdasarkan username ATAU email
+        $user = User::where('is_active', true)
+                    ->where(function ($query) use ($request) {
+                        $query->where('username', $request->username)
+                              ->orWhere('email', $request->username);
+                    })
                     ->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
@@ -85,6 +93,7 @@ class AuthController extends Controller
             'user'    => [
                 'id'         => $user->id,
                 'name'       => $user->name,
+                'username'   => $user->username,
                 'email'      => $user->email,
                 'role'       => $user->role,
                 'department' => $user->department,
@@ -133,7 +142,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Refresh token (opsional)
+     * Refresh token
      * POST /api/auth/refresh
      */
     public function refresh(Request $request)
@@ -151,5 +160,32 @@ class AuthController extends Controller
             'success' => true,
             'token'   => $token,
         ]);
+    }
+
+    /**
+     * Setup Manager — route untuk membuat manager pertama
+     * POST /api/setup-manager
+     */
+    public function setupManager(Request $request)
+    {
+        if (User::where('role', 'manager')->exists()) {
+            return response()->json(['message' => 'Manager already exists'], 400);
+        }
+
+        $request->validate([
+            'name'     => 'required|string',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::create([
+            'name'      => $request->name,
+            'username'  => $request->username,
+            'password'  => Hash::make($request->password),
+            'role'      => 'manager',
+            'is_active' => true,
+        ]);
+
+        return response()->json(['message' => 'Manager created', 'user' => $user]);
     }
 }

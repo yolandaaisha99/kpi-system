@@ -3,7 +3,7 @@
 // ============================================================
 // KPI SYSTEM — routes/api.php
 // Semua endpoint REST API Laravel
-// Base URL: https://kpi-backend-802214430478.asia-southeast2.run.app/api
+// Base URL: /api
 // ============================================================
 
 use Illuminate\Support\Facades\Route;
@@ -23,30 +23,10 @@ use App\Http\Controllers\ChatController;
 Route::prefix('auth')->group(function () {
     Route::post('/login',    [AuthController::class, 'login']);    // POST /api/auth/login
     Route::post('/register', [AuthController::class, 'register']); // POST /api/auth/register
-    Route::post('/refresh',  [AuthController::class, 'refresh']);  // POST /api/auth/refresh
 });
 
-// Temporary route to create a manager
-Route::post('/setup-manager', function (\Illuminate\Http\Request $request) {
-    if (\App\Models\User::where('role', 'manager')->exists()) {
-        return response()->json(['message' => 'Manager already exists'], 400);
-    }
-    
-    $request->validate([
-        'name' => 'required|string',
-        'username' => 'required|string|unique:users',
-        'password' => 'required|string'
-    ]);
-
-    $user = \App\Models\User::create([
-        'name' => $request->name,
-        'username' => $request->username,
-        'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-        'role' => 'manager',
-        'is_active' => true
-    ]);
-    return response()->json(['message' => 'Manager created', 'user' => $user]);
-});
+// Setup manager pertama (controller-based, bisa di-cache)
+Route::post('/setup-manager', [AuthController::class, 'setupManager']);
 
 // ──────────────────────────────────────────────────────────
 // PROTECTED ROUTES — wajib login (token Sanctum)
@@ -56,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Auth ──────────────────────────────────
     Route::post('/auth/logout', [AuthController::class, 'logout']); // POST /api/auth/logout
     Route::get('/auth/me',      [AuthController::class, 'me']);     // GET  /api/auth/me
+    Route::post('/auth/refresh', [AuthController::class, 'refresh']); // POST /api/auth/refresh
 
     // ── Dashboard (manajer) ───────────────────
     Route::get('/dashboard', [DashboardController::class, 'index']); // GET /api/dashboard
@@ -118,4 +99,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/chats',           [ChatController::class, 'index']); // GET  /api/chats
     Route::get('/chats/{threadId}',[ChatController::class, 'show']);  // GET  /api/chats/{threadId}
     Route::post('/chats',          [ChatController::class, 'store']); // POST /api/chats
-});
+});

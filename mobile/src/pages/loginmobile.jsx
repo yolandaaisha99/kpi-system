@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import api from '../utils/api.js'
 import styles from './loginmobile.module.css'
 
@@ -82,6 +82,8 @@ export default function LoginMobile() {
         </form>
 
         <p className={styles.hint}>
+          Belum punya akun? <Link to="/register">Daftar di sini</Link>
+          <br /><br />
           Manajer? Buka <strong>kpi-frontend.run.app</strong>
         </p>
       </div>

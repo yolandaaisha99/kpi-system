@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         // ── Users ─────────────────────────────────
         $manager = User::create([
             'name'       => 'Budi Manajer',
+            'username'   => 'manager',
             'email'      => 'manager@kpi.app',
             'password'   => Hash::make('password123'),
             'role'       => 'manager',
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
 
         $andi = User::create([
             'name'       => 'Andi Pratama',
+            'username'   => 'andi',
             'email'      => 'andi@kpi.app',
             'password'   => Hash::make('password123'),
             'role'       => 'employee',
@@ -35,6 +37,7 @@ class DatabaseSeeder extends Seeder
 
         $sari = User::create([
             'name'       => 'Sari Lestari',
+            'username'   => 'sari',
             'email'      => 'sari@kpi.app',
             'password'   => Hash::make('password123'),
             'role'       => 'employee',
@@ -44,6 +47,7 @@ class DatabaseSeeder extends Seeder
 
         $budi = User::create([
             'name'       => 'Budi Santoso',
+            'username'   => 'budi',
             'email'      => 'budi@kpi.app',
             'password'   => Hash::make('password123'),
             'role'       => 'employee',
@@ -53,6 +57,7 @@ class DatabaseSeeder extends Seeder
 
         $dewi = User::create([
             'name'       => 'Dewi Rahayu',
+            'username'   => 'dewi',
             'email'      => 'dewi@kpi.app',
             'password'   => Hash::make('password123'),
             'role'       => 'employee',
