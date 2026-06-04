@@ -21,8 +21,31 @@ use App\Http\Controllers\ChatController;
 // PUBLIC ROUTES — tidak perlu login
 // ──────────────────────────────────────────────────────────
 Route::prefix('auth')->group(function () {
-    Route::post('/login',   [AuthController::class, 'login']);   // POST /api/auth/login
-    Route::post('/refresh', [AuthController::class, 'refresh']); // POST /api/auth/refresh
+    Route::post('/login',    [AuthController::class, 'login']);    // POST /api/auth/login
+    Route::post('/register', [AuthController::class, 'register']); // POST /api/auth/register
+    Route::post('/refresh',  [AuthController::class, 'refresh']);  // POST /api/auth/refresh
+});
+
+// Temporary route to create a manager
+Route::post('/setup-manager', function (\Illuminate\Http\Request $request) {
+    if (\App\Models\User::where('role', 'manager')->exists()) {
+        return response()->json(['message' => 'Manager already exists'], 400);
+    }
+    
+    $request->validate([
+        'name' => 'required|string',
+        'username' => 'required|string|unique:users',
+        'password' => 'required|string'
+    ]);
+
+    $user = \App\Models\User::create([
+        'name' => $request->name,
+        'username' => $request->username,
+        'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+        'role' => 'manager',
+        'is_active' => true
+    ]);
+    return response()->json(['message' => 'Manager created', 'user' => $user]);
 });
 
 // ──────────────────────────────────────────────────────────

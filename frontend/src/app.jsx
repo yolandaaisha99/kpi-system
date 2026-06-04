@@ -6,6 +6,7 @@ import Employees from './pages/employees.jsx'
 import Evaluations from './pages/evaluation.jsx'
 import Reports from './pages/report.jsx'
 import Login from './pages/login.jsx'
+import Register from './pages/register.jsx'
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('kpi_token')
@@ -17,6 +18,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/"
           element={

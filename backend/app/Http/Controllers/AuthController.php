@@ -11,23 +11,61 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
+     * Register — membuat akun baru (otomatis employee)
+     * POST /api/auth/register
+     */
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:100',
+            'username' => 'required|string|max:50|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $user = User::create([
+            'name'      => $request->name,
+            'username'  => $request->username,
+            'password'  => Hash::make($request->password),
+            'role'      => 'employee',
+            'is_active' => true,
+        ]);
+
+        $abilities = ['employee:progress', 'employee:view'];
+        $token = $user->createToken('kpi-token', $abilities)->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'token'   => $token,
+            'user'    => [
+                'id'         => $user->id,
+                'name'       => $user->name,
+                'username'   => $user->username,
+                'role'       => $user->role,
+                'department' => $user->department,
+                'position'   => $user->position,
+                'avatar_url' => $user->avatar_url,
+            ],
+        ], 201);
+    }
+
+    /**
      * Login — menghasilkan token Sanctum
      * POST /api/auth/login
      */
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|string|min:6',
+            'username' => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        $user = User::where('email', $request->email)
+        $user = User::where('username', $request->username)
                     ->where('is_active', true)
                     ->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Email atau password salah.'],
+                'username' => ['Username atau password salah.'],
             ]);
         }
 
@@ -83,6 +121,7 @@ class AuthController extends Controller
             'data'    => [
                 'id'         => $user->id,
                 'name'       => $user->name,
+                'username'   => $user->username,
                 'email'      => $user->email,
                 'role'       => $user->role,
                 'department' => $user->department,
