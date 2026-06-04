@@ -110,9 +110,6 @@ CREATE TABLE task_progress (
   task_id         INT UNSIGNED NOT NULL,
   employee_id     INT UNSIGNED NOT NULL,
   progress_value  DECIMAL(12,2) NOT NULL, -- nilai progres saat update
-  percentage      DECIMAL(5,2) GENERATED ALWAYS AS (
-                    (progress_value / (SELECT target FROM tasks WHERE id = task_id)) * 100
-                  ) VIRTUAL,
   notes           TEXT,
   evidence_url    VARCHAR(500),            -- URL ke Firestore/Cloud Storage
   updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
