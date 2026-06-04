@@ -33,7 +33,7 @@ jobs:
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars="APP_ENV=production,APP_DEBUG=true,LOG_CHANNEL=stderr,APP_KEY=${{ secrets.APP_KEY }},DB_HOST=${{ secrets.CLOUD_SQL_HOST }},DB_DATABASE=kpi_system,DB_USERNAME=root,DB_PASSWORD=${{ secrets.DB_PASSWORD }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" \
+            --set-env-vars="APP_ENV=production,APP_DEBUG=true,LOG_CHANNEL=stderr,APP_KEY=${{ secrets.APP_KEY }},DB_HOST=${{ secrets.CLOUD_SQL_HOST }},DB_DATABASE=kpi_system,DB_USERNAME=root,DB_PASSWORD=NasiGorengen444kk!,GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" \
             --memory 512Mi \
             --min-instances 0 \
             --max-instances 5
