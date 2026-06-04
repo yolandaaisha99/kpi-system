@@ -11,6 +11,24 @@ CREATE DATABASE IF NOT EXISTS kpi_system
 USE kpi_system;
 
 -- ------------------------------------------------------------
+-- TABEL: personal_access_tokens
+-- Menyimpan token API (Sanctum) untuk autentikasi Mobile/Web
+-- ------------------------------------------------------------
+CREATE TABLE personal_access_tokens (
+  id bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  tokenable_type varchar(255) NOT NULL,
+  tokenable_id bigint(20) unsigned NOT NULL,
+  name varchar(255) NOT NULL,
+  token varchar(64) NOT NULL UNIQUE,
+  abilities text,
+  last_used_at timestamp NULL DEFAULT NULL,
+  expires_at timestamp NULL DEFAULT NULL,
+  created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX personal_access_tokens_tokenable_type_tokenable_id_index (tokenable_type, tokenable_id)
+);
+
+-- ------------------------------------------------------------
 -- TABEL: users
 -- Menyimpan data manajer dan karyawan
 -- ------------------------------------------------------------
