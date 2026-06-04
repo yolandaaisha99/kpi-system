@@ -57,10 +57,12 @@ export default function Login() {
 
         <form onSubmit={handleSubmit}>
           <div className={styles.formRow}>
-            <label className={styles.label}>Email</label>
+            <label htmlFor="email" className={styles.label}>Email</label>
             <input
+              id="email"
               type="email"
               name="email"
+              autoComplete="email"
               className={styles.input}
               placeholder="manager@kpi.app"
               value={form.email}
@@ -69,10 +71,12 @@ export default function Login() {
             />
           </div>
           <div className={styles.formRow}>
-            <label className={styles.label}>Password</label>
+            <label htmlFor="password" className={styles.label}>Password</label>
             <input
+              id="password"
               type="password"
               name="password"
+              autoComplete="current-password"
               className={styles.input}
               placeholder="••••••••"
               value={form.password}
