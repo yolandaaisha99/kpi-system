@@ -181,6 +181,7 @@ class AuthController extends Controller
         $user = User::create([
             'name'      => $request->name,
             'username'  => $request->username,
+            'email'     => $request->username . '@kpi.app',
             'password'  => Hash::make($request->password),
             'role'      => 'manager',
             'is_active' => true,
