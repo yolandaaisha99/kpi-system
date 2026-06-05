@@ -5,7 +5,9 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.3"
+        "laravel/sanctum": "^3.3",
+        "google/cloud-firestore": "^1.36",
+        "league/flysystem-google-cloud-storage": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
