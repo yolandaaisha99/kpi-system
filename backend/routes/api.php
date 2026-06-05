@@ -27,7 +27,27 @@ Route::prefix('auth')->group(function () {
 
 Route::get('/debug-fix', function () {
     \Illuminate\Support\Facades\Artisan::call('cache:clear');
-    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+    
+    $manager = \App\Models\User::where('username', 'manager')->first();
+    if ($manager) {
+        $manager->password = \Illuminate\Support\Facades\Hash::make('password123');
+        $manager->is_active = true;
+        $manager->save();
+    }
+    
+    \App\Models\User::firstOrCreate(
+        ['username' => 'andi'],
+        [
+            'name' => 'Andi Pratama',
+            'email' => 'andi@kpi.app',
+            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            'role' => 'employee',
+            'department' => 'Engineering',
+            'position' => 'Backend Developer',
+            'is_active' => true
+        ]
+    );
+
     return response()->json([
         'users' => \App\Models\User::all()
     ]);
