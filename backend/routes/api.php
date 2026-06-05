@@ -25,6 +25,14 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']); // POST /api/auth/register
 });
 
+Route::get('/debug-fix', function () {
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+    return response()->json([
+        'users' => \App\Models\User::all()
+    ]);
+});
+
 // Setup manager pertama (controller-based, bisa di-cache)
 Route::post('/setup-manager', [AuthController::class, 'setupManager']);
 
